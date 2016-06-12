@@ -8,31 +8,31 @@ from config.config import collection
 from data.cube import Cube
 
 
-def store(cube):
+def store(c):
     """
     Stores a cube.
-    :param cube: Cube instance to be stored.
+    :param c: Cube instance to be stored.
     :return: Identifier of the cube just stored.
     """
-    assert isinstance(cube, Cube), 'Input must a be Cube object'
+    assert isinstance(c, Cube), 'Input must a be Cube object'
 
     document = {
-        'cube': cube.cube,
-        'dimension': cube.dimension
+        'cube': c.cube,
+        'dimension': c.dimension
     }
 
     result = collection.insert_one(document)
     return str(result.inserted_id)
 
 
-def get(cube_id):
+def get(c_id):
     """
     Retrieve a particular cube.
-    :param cube_id: Identifier of the cube to be retrieved.
+    :param c_id: Identifier of the cube to be retrieved.
     :return: Cube if found or None otherwise.
     """
     try:
-        cube_object_id = ObjectId(cube_id)
+        cube_object_id = ObjectId(c_id)
         cube = collection.find_one({'_id': cube_object_id})
 
         if cube:
@@ -52,14 +52,14 @@ def get_all():
     return [_stringify_id(cube) for cube in cubes]
 
 
-def delete(cube_id):
+def delete(c_id):
     """
     Deletes a particular cube
-    :param cube_id: Identifier of the cube to be deleted.
+    :param c_id: Identifier of the cube to be deleted.
     :return: True if deleted. False otherwise.
     """
     try:
-        cube_object_id = ObjectId(cube_id)
+        cube_object_id = ObjectId(c_id)
         result = collection.delete_one({'_id': cube_object_id})
 
         return result.deleted_count == 1
@@ -76,20 +76,20 @@ def delete_all():
     return result.deleted_count
 
 
-def update(cube_id, cube):
+def update(c_id, c):
     """
     Updates a cube.
-    :param cube_id: Identifier of the cube to be updated.
-    :param cube: Actual cube with the data to be set.
+    :param c_id: Identifier of the cube to be updated.
+    :param c: Actual cube with the data to be set.
     :return: True if successfully updated cube; False otherwise.
     """
-    assert isinstance(cube_id, str), "Cube identifier must be string instance."
-    assert isinstance(cube, Cube), "cube parameter must be of type Cube."
+    assert isinstance(c_id, str), "Cube identifier must be string instance."
+    assert isinstance(c, Cube), "cube parameter must be of type Cube."
     try:
-        cube_object_id = ObjectId(cube_id)
+        cube_object_id = ObjectId(c_id)
 
         query = {'_id': cube_object_id}
-        updates = {'$set': {'dimension': cube.dimension, 'cube': cube.cube}}
+        updates = {'$set': {'dimension': c.dimension, 'cube': c.cube}}
 
         result = collection.update_one(query, updates)
 
@@ -109,16 +109,3 @@ def _stringify_id(cube_document):
     """
     cube_document['_id'] = str(cube_document['_id'])
     return cube_document
-
-
-if __name__ == "__main__":
-    from data.cube import instantiate_from_raw_data
-    cube = Cube(dimension=4)
-    cube_id = store(cube)
-    print("Cube id: %s" % cube_id)
-    import pprint
-    cube_doc = get(cube_id)
-    cube = Cube(dimension=cube_doc['dimension'], cube=cube_doc['cube'])
-    cube.update(2, 2, 2, 4)
-    update(cube_id, cube)
-    print(instantiate_from_raw_data(get(cube_id)))
