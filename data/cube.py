@@ -4,6 +4,15 @@ process the incoming requests at runtime.
 """
 
 
+def instantiate_from_raw_data(dictionary):
+    """
+    Factory method that creates a new cube from raw data from database.
+    :param dictionary: dict instance.
+    :return: new Cube filled with the data received in the input.
+    """
+    return Cube(dictionary['dimension'], dictionary['cube'])
+
+
 class Cube:
     """
     Provides an abstraction of a Cube of integers.
@@ -14,10 +23,10 @@ class Cube:
     # A cube is represented as a dictionary (a.k.a. hash table) for accessibility speed and ease. At first, a cube has
     # all its elements set to 0. Given that we only query the cube by summing the elements within a given range and
     # provided that 0 is the neutral element of the sum, there's no use in storing it. Hence, only the positions with a
-    # non-zero value has a (key, value) pair in the dictionary. Examples:
-    # 100-dimensional matrix with 5 at position (1, 56, 9):
-    #   {1: {56: {9: 5}}}
-    # Here's how dimension is represented:
+    # non-zero value has a (key, value) pair in the dictionary. Example:
+    # * 100-dimensional matrix with 5 at position (1, 56, 9):
+    #       {'1': {'56': {'9': 5}}}
+    # Here's how dimensions are represented:
     #   row: dict; key: int (z-coordinate); value: int (actual element).
     #   matrix: dict; key: int (y-coordinate); value: row.
     #   cube: dict; key: int (x-coordinate); value: matrix.
@@ -39,6 +48,12 @@ class Cube:
         else:
             self.cube = {}  # This represents a cube with all its elements equal to 0.
 
+    def __str__(self):
+        """
+        :return: human readable representation of a Cube.
+        """
+        return "Cube(dimension=%d,cube=%s)" % (self.dimension, self.cube)
+
     def update(self, x, y, z, value):
         """
         Replaces the element at point (x,y,z) with the input value.
@@ -50,6 +65,7 @@ class Cube:
         self._validate_integers([x, y, z, value], ["X", "Y", "Z", "value"])
         self._elements_in_range([x, y, z], ["X", "Y", "Z"])
 
+        x, y, z = str(x), str(y), str(z)  # Stringify coordinates.
         matrix = self.cube.get(x, {})  # Extract the matrix if it exists, or create a new one.
         row = matrix.get(y, {})  # Extract a row if it exists, or create a new one.
 
@@ -89,6 +105,7 @@ class Cube:
         """
          Sums elements that complies with the specified range.
         """
+
         # =============================================================================================
         # Inner helper functions. Defined here because their only purpose is to do their parent's work.
         # =============================================================================================
@@ -101,8 +118,9 @@ class Cube:
             y = y_init
 
             while y <= y_end:
-                if y in matrix:
-                    matrix_total += sum_row(matrix[y])
+                y_key = str(y)
+                if y_key in matrix:
+                    matrix_total += sum_row(matrix[y_key])
                 y += 1
             return matrix_total
 
@@ -114,7 +132,8 @@ class Cube:
             z = z_init
 
             while z <= z_end:
-                row_total += row.get(z, 0)
+                z_key = str(z)
+                row_total += row.get(z_key, 0)
                 z += 1
 
             return row_total
@@ -123,8 +142,9 @@ class Cube:
         x = x_init  # Iterator var
 
         while x <= x_end:
-            if x in self.cube:
-                cube_total += sum_matrix(self.cube[x])
+            x_key = str(x)
+            if x_key in self.cube:
+                cube_total += sum_matrix(self.cube[x_key])
             x += 1
 
         return cube_total
