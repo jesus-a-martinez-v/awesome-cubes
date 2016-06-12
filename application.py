@@ -32,7 +32,7 @@ def create_cube():
         cube = Cube(dimension=request_body['dimension'])
         cube_id = store(cube)
 
-        return make_response(jsonify(message='A new cube with id %s has been created' % cube_id), _SUCCESS)
+        return make_response(jsonify(message='Cube created successfully', data=cube_id), _SUCCESS)
     except Exception as e:
         return make_response(jsonify(message='Internal Server Error. Details: %s' % e), _INTERNAL_SERVER_ERROR)
 

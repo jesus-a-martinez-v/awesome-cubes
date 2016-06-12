@@ -2,3 +2,4 @@
 
 .idea
 *.pyc
+tests/test_cube_output

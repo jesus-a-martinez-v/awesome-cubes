@@ -66,7 +66,8 @@ POST /cubes
 
 # Response:
 {
-    "message": "A new cube with id 575cf0a57d09db2bf185dea9 has been created"
+    "message": "Cube created successfully",
+    "data": "575cf0a57d09db2bf185dea9"
 }
 ```
 ______
