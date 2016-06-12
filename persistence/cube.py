@@ -83,8 +83,8 @@ def update(c_id, c):
     :param c: Actual cube with the data to be set.
     :return: True if successfully updated cube; False otherwise.
     """
-    assert isinstance(c_id, str), "Cube identifier must be string instance."
-    assert isinstance(c, Cube), "cube parameter must be of type Cube."
+    assert isinstance(c_id, str), 'Cube identifier must be string instance.'
+    assert isinstance(c, Cube), 'cube parameter must be of type Cube.'
     try:
         cube_object_id = ObjectId(c_id)
 

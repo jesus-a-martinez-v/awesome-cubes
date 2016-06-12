@@ -37,13 +37,13 @@ class Cube:
         :param dimension: integer between 1 and 100, inclusive.
         :return: New Cube instance.
         """
-        assert isinstance(dimension, int), "dimension must be of type int."
-        assert 1 <= dimension <= 100, "dimension must fall in the range [0, 100]"
+        assert isinstance(dimension, int), 'dimension must be of type int.'
+        assert 1 <= dimension <= 100, 'dimension must fall in the range [0, 100]'
 
         self.dimension = dimension
 
         if cube:
-            assert isinstance(cube, dict), "cube must be of type dict"
+            assert isinstance(cube, dict), 'cube must be of type dict'
             self.cube = cube
         else:
             self.cube = {}  # This represents a cube with all its elements equal to 0.
@@ -52,7 +52,7 @@ class Cube:
         """
         :return: human readable representation of a Cube.
         """
-        return "Cube(dimension=%d,cube=%s)" % (self.dimension, self.cube)
+        return 'Cube(dimension=%d,cube=%s)' % (self.dimension, self.cube)
 
     def update(self, x, y, z, value):
         """
@@ -62,8 +62,8 @@ class Cube:
         :param z: Z coordinate. Must be between 1 and N, where N is the dimension of the cube.
         :param value: Value to be set at the (X,Y,Z) point.
         """
-        self._validate_integers([x, y, z, value], ["X", "Y", "Z", "value"])
-        self._elements_in_range([x, y, z], ["X", "Y", "Z"])
+        self._validate_integers([x, y, z, value], ['X', 'Y', 'Z', 'value'])
+        self._elements_in_range([x, y, z], ['X', 'Y', 'Z'])
 
         x, y, z = str(x), str(y), str(z)  # Stringify coordinates.
         matrix = self.cube.get(x, {})  # Extract the matrix if it exists, or create a new one.
@@ -87,9 +87,9 @@ class Cube:
         """
         # Lists used for validation.
         from_ = [x_init, y_init, z_init]
-        from_names = ["x_init", "y_init", "z_init"]
+        from_names = ['x_init', 'y_init', 'z_init']
         to_ = [x_end, y_end, z_end]
-        to_names = ["x_end", "y_end", "z_end"]
+        to_names = ['x_end', 'y_end', 'z_end']
 
         # Validate input.
         self._validate_integers(from_ + to_, from_names + to_names)
@@ -153,7 +153,7 @@ class Cube:
         """
          Validates elements are within the cube's limits.
         """
-        error_message = "%s out of range. Must be between 1 and %d"
+        error_message = '%s out of range. Must be between 1 and %d'
         for var_name, var_value in zip(elements_names, elements):
             assert 1 <= var_value <= self.dimension, error_message % (var_name, self.dimension)
 
@@ -161,7 +161,7 @@ class Cube:
         """
          Validates that input ranges are correct (from <= to)
         """
-        error_message = "Invalid range: Doesn't satisfy %s <= %s"
+        error_message = 'Invalid range: %s <= %s not satisfied'
 
         for from_, to_, from_name, to_name in zip(from_elems, to_elems, from_elems_names, to_elems_names):
             assert from_ <= to_, error_message % (from_name, to_name)
@@ -170,7 +170,7 @@ class Cube:
         """
         Validates that a series of elements are integers.
         """
-        error_message = "%s must be instance of int"
+        error_message = '%s must be instance of int'
 
         for var_name, var_value in zip(elements_names, elements):
             assert isinstance(var_value, int), error_message % var_name
