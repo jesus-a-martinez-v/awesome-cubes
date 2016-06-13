@@ -7,6 +7,8 @@ def test_cube():
     Tests the update and query behaviors of the cube.
     """
     parent_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Names of the files used to perform the test
     input_filename = "%s/test_cube_input" % parent_dir
     output_filename = "%s/test_cube_output" % parent_dir
     expected_output_filename = "%s/test_cube_expected_output" % parent_dir
@@ -14,24 +16,25 @@ def test_cube():
     out = open(output_filename, "w")
     with open(input_filename, "r") as in_data:
         TESTS = None
-        N = None
-        M = None
+        cube_dimension = None
+        remaining_tests = None
         cube = None
+        output_lines = []
         for line in in_data:
             if not TESTS:
                 TESTS = int(line)
                 continue
 
-            if not N or not M:
-                N, M = line.split(" ")
-                N = int(N)
-                M = int(M)
+            if not cube_dimension or not remaining_tests:
+                cube_dimension, remaining_tests = line.split(" ")
+                cube_dimension = int(cube_dimension)
+                remaining_tests = int(remaining_tests)
 
-                cube = Cube(dimension=N)
+                cube = Cube(dimension=cube_dimension)
                 continue
 
-            if M > 0:
-                M -= 1
+            if remaining_tests > 0:
+                remaining_tests -= 1
                 input = line.split(" ")
 
                 if input[0] == "UPDATE":
@@ -47,8 +50,9 @@ def test_cube():
                     x2 = int(input[4])
                     y2 = int(input[5])
                     z2 = int(input[6])
-                    out.write("%d\n" % cube.query(x1, x2, y1, y2, z1, z2))
+                    output_lines.append("%d" % cube.query(x1, x2, y1, y2, z1, z2))
 
+        out.write("\n".join(output_lines))
     out.flush()
     out.close()
 
