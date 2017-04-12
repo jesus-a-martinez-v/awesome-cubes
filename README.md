@@ -1,5 +1,7 @@
 # README
 
+## FIRST
+[Read the challenge description](https://www.hackerrank.com/challenges/cube-summation?h_r=internal-search)
 This document explains how to get the application up and running, as well as how to use the API.
 
 ### Dependencies
