@@ -199,8 +199,3 @@ def test_delete_all():
     # Collection must be empty
     cubes = get_all()
     eq_(len(cubes), 0)
-
-
-
-
-
